@@ -40,8 +40,37 @@ require("packer").startup(function(use)
   -- colorschemes
   use("ellisonleao/gruvbox.nvim")
   use("arcticicestudio/nord-vim")
-  vim.o.background = "dark" -- or "light" for light mode
-  vim.cmd([[colorscheme gruvbox]])
+  use("fenetikm/falcon")
+  use("bluz71/vim-moonfly-colors")
+  use("rafamadriz/neon")
+  use('rockerBOO/boo-colorscheme-nvim')
+  use('aktersnurra/no-clown-fiesta.nvim')
+
+  -- require("boo-colorscheme").use({})
+  require("no-clown-fiesta").setup({
+  transparent = false, -- Enable this to disable the bg color
+  styles = {
+    -- You can set any of the style values specified for `:h nvim_set_hl`
+    comments = {},
+    keywords = {},
+    functions = { italic = true },
+    variables = {},
+    type = { bold = true },
+    lsp = { underline = true }
+  },
+})
+
+
+
+if vim.fn.has("termguicolors") then
+  vim.opt.termguicolors = true
+end
+
+-- vim.o.background = "dark" -- or "light" for light mode
+  -- vim.g.neon_style = "dark"
+  vim.cmd([[colorscheme habamax]])
+
+
 
   -- LSP
   use("neovim/nvim-lspconfig")
@@ -93,7 +122,7 @@ require("packer").startup(function(use)
   }
   require('lualine').setup {
     options = {
-        theme = 'gruvbox',
+        theme = 'neon',
     },
     sections = {
         lualine_a = {'mode'},
@@ -112,6 +141,7 @@ require("packer").startup(function(use)
     lualine_z = {}
   },
   }
+  vim.opt.showmode = false
 
 
   -- lua version of copilot
@@ -321,7 +351,7 @@ cmp.setup({
   },
 })
 
--- keybinds  (f8 does a rust debug-formatted println because i'm bad at rust and need it a lot lol) 
+-- keybinds 
 vim.api.nvim_set_keymap('n', '<F8>', 'iprintln!("{:?}",);<Esc>hi<Space>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<F8>', 'println!("{:?}",);<Esc>hi<Space>', { noremap = true, silent = true })
 
