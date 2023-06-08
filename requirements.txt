@@ -1,0 +1,5 @@
+anakin-language-server
+flake8
+neovim
+pylyzer
+python-lsp-server
