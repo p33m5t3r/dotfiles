@@ -1,0 +1,17 @@
+# add new user
+adduser anon
+
+# add new user to sudoers
+usermod -aG sudo anon
+
+# copy root ssh stuff to new user
+rsync --archive --chown=anon:anon ~/.ssh /home/anon
+
+# disable password auth for ssh
+vim /etc/ssh/ssh_config
+
+# -> PasswordAuthentication no
+
+# reload ssh
+service ssh restart
+
