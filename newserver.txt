@@ -1,3 +1,9 @@
+
+## i always forget at least one of these commands, hence this file
+
+# update packages
+apt update && apt upgrade
+
 # add new user
 adduser anon
 
@@ -11,7 +17,14 @@ rsync --archive --chown=anon:anon ~/.ssh /home/anon
 vim /etc/ssh/ssh_config
 
 # -> PasswordAuthentication no
+# -> PermitRootAuthorwhatever no
 
 # reload ssh
 service ssh restart
+
+# restart box
+sudo reboot
+
+# install python stuff
+sudo apt install python3-pip
 

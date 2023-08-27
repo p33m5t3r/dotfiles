@@ -13,8 +13,7 @@ vim.api.nvim_set_option("clipboard","unnamed")
 vim.g.python3_host_prog = '/Users/anon/.envs/neovim3/bin/python3'
 vim.g.python_host_prog = '/Users/anon/.envs/neovim3/bin/python3'
 
--- airline theme
-vim.g.airline_theme='minimalist'
+
 
 -- nerd tree
 vim.g.NERDTreeWinSize=15
@@ -38,7 +37,13 @@ require("packer").startup(function(use)
   use("wbthomason/packer.nvim")
 
   -- colorschemes
+  -- https://github.com/ellisonleao/gruvbox.nvim/blob/main/lua/gruvbox/palette.lua
   use("ellisonleao/gruvbox.nvim")
+  require("gruvbox").setup({
+    palette_overrides = {
+        light0 = "#fdf6e3",
+    }
+  })
   use("arcticicestudio/nord-vim")
   use("fenetikm/falcon")
   use("bluz71/vim-moonfly-colors")
@@ -48,38 +53,51 @@ require("packer").startup(function(use)
 
   -- require("boo-colorscheme").use({})
   require("no-clown-fiesta").setup({
-  transparent = false, -- Enable this to disable the bg color
-  styles = {
-    -- You can set any of the style values specified for `:h nvim_set_hl`
-    comments = {},
-    keywords = {},
-    functions = { italic = true },
-    variables = {},
-    type = { bold = true },
-    lsp = { underline = true }
-  },
-})
+      transparent = false, -- Enable this to disable the bg color
+      styles = {
+        -- You can set any of the style values specified for `:h nvim_set_hl`
+        comments = {},
+        keywords = {},
+        functions = { italic = true },
+        variables = {},
+        type = { bold = true },
+        lsp = { underline = true }
+      },
+  })
 
 
+  -- setup colorscheme
+  if vim.fn.has("termguicolors") then
+    vim.opt.termguicolors = true
+  end
 
-if vim.fn.has("termguicolors") then
-  vim.opt.termguicolors = true
-end
+  local colorconfig, os_ccfg = "default", os.getenv("COLORCONFIG")
 
--- vim.o.background = "dark" -- or "light" for light mode
-  -- vim.g.neon_style = "dark"
-  vim.cmd([[colorscheme habamax]])
+  if os_ccfg then
+      colorconfig = os_ccfg
+  end
 
+  local lualine_theme = "neon"
+  if colorconfig == "default" then
+      vim.o.background = "dark"
+      vim.cmd([[colorscheme habamax]])
+
+  elseif colorconfig == "light" then
+      vim.o.background = "light"
+      lualine_theme = "gruvbox_light"
+      vim.cmd([[colorscheme gruvbox]])
+  end
 
 
   -- LSP
   use("neovim/nvim-lspconfig")
-  use({
+  use{
     "j-hui/fidget.nvim",
+    tag='legacy',
     config = function()
       require("fidget").setup()
     end
-  })
+  }
 
   -- Autocompletion framework
   use("hrsh7th/nvim-cmp")
@@ -100,6 +118,7 @@ end
   -- Adds extra functionality over rust analyzer
   use("simrat39/rust-tools.nvim")
 
+  
   -- Optional
   use("nvim-lua/popup.nvim")
   use("nvim-lua/plenary.nvim")
@@ -120,22 +139,60 @@ end
     'nvim-lualine/lualine.nvim',
     requires = { 'nvim-tree/nvim-web-devicons', opt = true }
   }
+
+  local function has_copilot(clients)
+    local has_copilot = false
+    for _, client in ipairs(clients) do
+      print(client.name)
+      if client.name == "copilot" then
+        has_copilot = true
+      end
+    end
+    return has_copilot
+  end
+
+
+  local function activelsp()
+    if not vim then
+      return "ACTIVELSP::ERR"
+    end
+
+    local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
+    local clients = vim.lsp.get_active_clients()    local cp_str = " (X)"
+
+    if has_copilot(clients) then
+      cp_str = " (AI)"
+    end
+    local msg = 'No Lsp' .. cp_str
+
+    if next(clients) == nil then
+      return msg
+    end
+    for _, client in ipairs(clients) do
+      local filetypes = client.config.filetypes
+      if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+        return client.name .. cp_str
+      end
+    end
+    return msg
+  end
+
   require('lualine').setup {
-    options = {
-        theme = 'neon',
+        options = {
+        theme = lualine_theme,
     },
     sections = {
         lualine_a = {'mode'},
         lualine_b = {'branch', 'diff', 'diagnostics'},
         lualine_c = {'filename'},
-        lualine_x = {'encoding', 'fileformat', 'filetype'},
-        lualine_y = {'windows'},
+        lualine_x = {'encoding', 'filetype'},
+        lualine_y = { activelsp },
         lualine_z = {'progress'}
     },
     inactive_sections = {
-    lualine_a = {},
+    lualine_a = {'branch'},
     lualine_b = {},
-    lualine_c = {'filename'},
+    lualine_c = {},
     lualine_x = {},
     lualine_y = {'windows'},
     lualine_z = {}
@@ -181,6 +238,15 @@ end
   require("scrollbar").setup()
 
   use("onsails/lspkind.nvim")
+    
+  use {
+      'mrcjkb/haskell-tools.nvim',
+      requires = {
+        'nvim-lua/plenary.nvim',
+        'nvim-telescope/telescope.nvim', -- optional
+      },
+      branch = '1.x.x', -- recommended
+  }
 
 end)
 
@@ -264,6 +330,9 @@ require'lspconfig'.pylsp.setup{
     }
   }
 }
+
+
+
 require("rust-tools").setup(opts)
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -354,5 +423,11 @@ cmp.setup({
 -- keybinds 
 vim.api.nvim_set_keymap('n', '<F8>', 'iprintln!("{:?}",);<Esc>hi<Space>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<F8>', 'println!("{:?}",);<Esc>hi<Space>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<C-s>(', 'c()<Esc>P', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<C-s>[', 'c[]<Esc>P', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<C-s>{', 'c{}<Esc>P', { noremap = true, silent = true })
 
+
+vim.api.nvim_command('highlight clear LspCodeLens')
+vim.api.nvim_command('highlight link LspCodeLens Comment')
 
