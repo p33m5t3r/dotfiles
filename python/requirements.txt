@@ -7,6 +7,9 @@ openai
 # anthropic
 anthropic
 
+# neovim
+neovim
+
 # python-lsp/python-lsp-server
 python-lsp-server[all]
 
