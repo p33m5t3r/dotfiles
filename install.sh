@@ -7,10 +7,16 @@ log_step() {
     echo "$(date): $1" >> install_log.txt
 }
 
-# Update system
+# update system
 update_system() {
     log_step "updating system"
     sudo apt update && sudo apt upgrade -y
+}
+
+# install common
+install_common() {
+    log_step "installing needed packages..."
+    sudo apt install -y python3 python3-pip
 }
 
 # get ~/.bashrc setup
@@ -24,7 +30,7 @@ configure_shell() {
 # ... install ./python/requirements.txt to general
 configure_python() {
     log_step "setting up python"
-    # fill me out
+    pip3 install --user virtualenv virtualenvwrapper
 }
 
 # install ligature fonts
@@ -47,28 +53,23 @@ configure_desktop() {
     log_step "setting up i3"
 }
 
-# install chrome, spotify, etc
-install_common() {
-    log_step "installing user programs"
-}
-
 # install common dev tools etc
 install_devel() {
     log_step "installing dev tools"
 }
 
 
-# Main installation process
+# main installation process
 main() {
-    update_system
-    configure_shell
-    configure_python
-    configure_fonts
-    configure_terminal
-    configure_nvim
-    configure_desktop
+    # update_system
     install_common
-    install_devel
+    # configure_shell
+    # configure_python
+    # configure_fonts
+    # configure_terminal
+    # configure_nvim
+    # configure_desktop
+    # install_devel
 }
 
 main
