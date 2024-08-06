@@ -7,8 +7,8 @@ vim.api.nvim_command('set shiftwidth=4')
 vim.api.nvim_command('set softtabstop=4')
 vim.api.nvim_command('set expandtab')
 vim.api.nvim_command('set backspace=indent,eol,start')
-vim.api.nvim_set_option("clipboard","unnamed")
-
+-- vim.api.nvim_set_option("clipboard","unnamedplus")
+vim.o.clipboard:append('unnamedplus')
 -- python setup
 vim.g.python3_host_prog = '/Users/anon/.envs/neovim3/bin/python3'
 vim.g.python_host_prog = '/Users/anon/.envs/neovim3/bin/python3'

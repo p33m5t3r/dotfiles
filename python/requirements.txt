@@ -1,0 +1,23 @@
+
+# system-wide common virtualenv
+
+# openai
+openai
+
+# anthropic
+anthropic
+
+# python-lsp/python-lsp-server
+python-lsp-server[all]
+
+# numpy
+numpy
+
+# pandas
+pandas
+
+# matplotlib
+matplotlib
+
+# ipython
+ipython

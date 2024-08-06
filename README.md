@@ -1,31 +1,30 @@
-## some of my dotfiles.
+## my system configuration
+
+
+### contents
+- shell
+    - bash + custom prompt
+- python
+    - virtualenv, virtualenvwrapper
+    - `~/.virtualenvs/general` setup
+- fonts
+    - install hack nerd ligature fonts
+- terminal
+    - konsole
+- nvim
+    - set config files
+    - install llm extension
+- desktop
+    - install i3
+    - set custom i3bar
+- gui
+    - chrome, spotify
+- devel
+    - will put common devel libs here
 
 ### installation
 
-```
-# if u want habamax colorscheme:
-cd ~/Downloads
-git clone https://github.com/habamax/vim-habamax
-cd vim-habamax 
-sudo cp vim-habamax /usr/share/nvim/runtime/colors/
-
-# install python stuff
-mkvirtualenv neovim3
-pip install -r requirements.txt
-# <replace paths in .init/lua with correct virtualenv>
-
----
-
-#### init.lua: neovim config
-* pkg manager: packer
-* themes: gruvbox/nord 
-* LSPs: nvim-lspconfig, rust, analyzer, rust-tools, pylsp
-* autocomplete: nvim-cmp
-* latex: vimtex
-* QoL: nerdtree, lualine, nvim-scrollbar, lspkind, and more...
-* ai stuff: copilot.lua, copilot-cmp, vim-ai 
-
-
-
-#### zshrc: zshrc
-* basic config, a few useful aliases
+1. `git clone https://github.com/p33m5t3r/dotfiles.git $HOME/.dotfiles`
+2. `cd ~/.dotfiles`
+3. `chmod +x install.sh`
+4. `sudo ./install.sh`
