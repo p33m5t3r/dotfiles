@@ -102,6 +102,11 @@ configure_desktop() {
 # install common dev tools etc
 install_devel() {
     log_step "installing dev tools"
+    # haskell
+    sudo apt install build-essential curl libffi-dev libffi8 \
+        libgmp-dev libgmp10 libncurses-dev pkg-config
+    
+    curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 }
 
 
@@ -115,7 +120,7 @@ main() {
     # configure_fonts
     # configure_terminal
     # configure_desktop
-    # install_devel
+    install_devel
 }
 
 main
