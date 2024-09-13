@@ -426,6 +426,38 @@ vim.api.nvim_create_user_command("Reload", reload_current_buffer, {})
 vim.cmd('command! -nargs=0 RL Reload')
 
 
+---------------------- haskell stuff ----------------------
+function OpenGhci()
+  -- Get the full path of the current file
+  local filename = vim.fn.expand('%:p')
+
+  -- Open a new split
+  vim.cmd('split')
+
+  -- Open terminal in insert mode
+  vim.cmd('terminal')
+  vim.cmd('startinsert')
+
+  -- Resize the split
+  vim.cmd('resize 15')
+
+  -- Function to send command to terminal
+  local function send_to_terminal(command)
+    vim.api.nvim_input(command)
+  end
+
+  -- Use vim.schedule to ensure the terminal is ready
+  vim.schedule(function()
+    -- Clear the terminal (optional)
+    send_to_terminal('clear<CR>')
+
+    -- Start GHCi and load the current file
+    send_to_terminal('ghci ' .. vim.fn.shellescape(filename) .. '<CR>')
+  end)
+end
+
+-- Map this function to a key, e.g., <Leader>g
+vim.api.nvim_set_keymap('n', '<Leader>g', ':lua OpenGhci()<CR>', {noremap = true, silent = true})
 
 
 
